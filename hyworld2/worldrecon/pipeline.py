@@ -656,6 +656,10 @@ def _disable_heads(model, head_names):
         "points": ("enable_pts",   ["pts_head"]),
         "gs":     ("enable_gs",    ["gs_head", "gs_renderer"]),
     }
+    # GS rendering requires camera poses; auto-disable GS if camera is disabled
+    head_names = list(head_names)
+    if "camera" in head_names and "gs" not in head_names:
+        head_names.append("gs")
     freed = 0
     for name in head_names:
         if name not in mapping:

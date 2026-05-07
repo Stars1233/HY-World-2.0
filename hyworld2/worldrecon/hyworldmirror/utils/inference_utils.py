@@ -355,14 +355,28 @@ def create_filter_mask(
         pre_edge_mask = final_mask
 
         if apply_edge_mask:
-            n_edges = normals_edge(normal_preds[i], tol=edge_normal_threshold, mask=pre_edge_mask)
-            d_edges = depth_edge(depth_preds[i, :, :, 0], rtol=edge_depth_threshold, mask=pre_edge_mask)
-            edge_mask = ~(d_edges & n_edges)
+            has_normals_data = normal_preds[i].any()
+            has_depth_data = depth_preds[i].any()
+            n_edges = normals_edge(normal_preds[i], tol=edge_normal_threshold, mask=pre_edge_mask) if has_normals_data else None
+            d_edges = depth_edge(depth_preds[i, :, :, 0], rtol=edge_depth_threshold, mask=pre_edge_mask) if has_depth_data else None
+            if d_edges is not None and n_edges is not None:
+                combined_edges = d_edges & n_edges
+            elif d_edges is not None:
+                combined_edges = d_edges
+            elif n_edges is not None:
+                combined_edges = n_edges
+            else:
+                combined_edges = np.zeros((H, W), dtype=bool)
+            edge_mask = ~combined_edges
             final_mask = edge_mask if final_mask is None else final_mask & edge_mask
 
             if gs_depth_preds is not None:
                 gs_d_edges = depth_edge(gs_depth_preds[i, :, :, 0], rtol=edge_depth_threshold, mask=pre_edge_mask)
-                gs_edge_mask = ~(gs_d_edges & n_edges)
+                if n_edges is not None:
+                    gs_combined = gs_d_edges & n_edges
+                else:
+                    gs_combined = gs_d_edges
+                gs_edge_mask = ~gs_combined
                 gs_frame_mask = gs_edge_mask if pre_edge_mask is None else pre_edge_mask & gs_edge_mask
 
         if apply_sky_mask:
@@ -465,8 +479,17 @@ def compute_filter_mask(predictions, imgs, img_paths, H, W, S,
         conf_np = predictions["depth_conf"][0].detach().cpu().float().numpy()
     else:
         conf_np = np.ones((S, H, W), dtype=np.float32)
-    depth_np = predictions["depth"][0].detach().cpu().float().numpy()
-    normal_np = predictions["normals"][0].detach().cpu().float().numpy()
+
+    # Edge mask uses depth and/or normals; skip only if both are missing
+    has_depth = "depth" in predictions
+    has_normals = "normals" in predictions
+    if apply_edge_mask and not has_depth and not has_normals:
+        apply_edge_mask = False
+
+    depth_np = (predictions["depth"][0].detach().cpu().float().numpy()
+                if has_depth else np.zeros((S, H, W, 1), dtype=np.float32))
+    normal_np = (predictions["normals"][0].detach().cpu().float().numpy()
+                 if has_normals else np.zeros((S, H, W, 3), dtype=np.float32))
 
     gs_depth_np = None
     if use_gs_depth and "gs_depth" in predictions:
