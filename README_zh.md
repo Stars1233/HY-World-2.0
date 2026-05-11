@@ -30,10 +30,10 @@ https://github.com/user-attachments/assets/b56f4750-25c9-48fb-83ff-d58526711463
 
 ## 🔥 最新动态
 
+- **[2026年5月11日]**：🤗 开源 HY-Pano 2.0 推理代码和模型权重！
 - **[2026年4月16日]**：🚀 发布 HY-World 2.0 技术报告及部分代码！
 - **[2026年4月16日]**：🤗 开源 WorldMirror 2.0 推理代码和模型权重！
 - **[即将发布]**：发布完整的 HY-World 2.0（World Generation）推理代码。
-- **[即将发布]**：发布 ![全景生成](https://img.shields.io/badge/Panorama_Generation-4285F4?style=flat-square)（HY-Pano 2.0）模型权重和代码。
 - **[即将发布]**：发布 ![轨迹规划](https://img.shields.io/badge/Trajectory_Planning-EA4335?style=flat-square)（WorldNav）代码。
 - **[即将发布]**：发布 ![世界扩展](https://img.shields.io/badge/World_Expansion-FBBC05?style=flat-square)（WorldStereo 2.0）模型权重和推理代码。
 
@@ -129,7 +129,7 @@ HY-World 2.0 是**开源的**3D世界模型，我们将发布所有模型权重�
 - ✅ 技术报告
 - ✅ WorldMirror 2.0 代码和模型权重
 - ⬜ 世界生成完整推理代码（WorldNav + World Composition）
-- ⬜ 全景生成（HY-Pano 2.0）模型和代码 — 可使用 [HunyuanWorld 1.0](https://github.com/Tencent-Hunyuan/HunyuanWorld-1.0)的全景图生成 作为临时替代
+- ✅ 全景生成（HY-Pano 2.0）模型和代码
 - ⬜ 世界扩展（WorldStereo 2.0）模型和代码 — 可使用 [WorldStereo](https://github.com/FuchengSu/WorldStereo) 作为临时替代
 
 
@@ -146,7 +146,8 @@ HY-World 2.0 是**开源的**3D世界模型，我们将发布所有模型权重�
 
 | 模型 | 描述 | 参数量 | 日期 | Hugging Face |
 |------|------|--------|------|--------------|
-| HY-Pano-2 [new] | 文本 / 图像 &rarr; 360° 全景 | — | 即将发布 | — |
+| HY-Pano-2 [new] | 文本 / 图像 &rarr; 360° 全景 | ~80B | 2026 | [下载](https://huggingface.co/tencent/HY-World-2.0/tree/main/HY-Pano-2.0) |
+| HY-Pano-2-Qwen [new] | 文本 / 图像 &rarr; 360° 全景 | ~425M | 2026 | [下载](https://huggingface.co/tencent/HY-World-2.0/blob/main/HY-Pano-2.0/pytorch_lora_weights.safetensors) |
 
 ### 世界生成 - WorldStereo 系列
 
@@ -196,9 +197,21 @@ rm -rf flash-attention
 pip install flash-attn --no-build-isolation
 ```
 
+**HY-Pano-2** 的安装请参阅 **[hyworld2/panogen/README.md](hyworld2/panogen/README.md)**。
+
 ### 代码使用 — 全景生成（HY-Pano-2）
 
-*即将发布。*
+完整文档和命令行参考，请参阅 **[hyworld2/panogen/README_zh_CN.md](hyworld2/panogen/README_zh_CN.md)**。
+
+我们为 HY-Pano 2.0 提供类似 `diffusers` 的 Python API。模型权重将在首次运行时自动从 Hugging Face 下载。
+
+```python
+from pipeline import HunyuanPanoPipeline
+
+pipeline = HunyuanPanoPipeline.from_pretrained('tencent/HY-World-2.0')
+output = pipeline('input.png')
+output.save('output_panorama.png')
+```
 
 ### 代码使用 — 世界生成（WorldNav、WorldStereo-2 和 3DGS）
 
