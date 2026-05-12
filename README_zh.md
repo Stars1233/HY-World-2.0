@@ -147,7 +147,7 @@ HY-World 2.0 是**开源的**3D世界模型，我们将发布所有模型权重�
 | 模型 | 描述 | 参数量 | 日期 | Hugging Face |
 |------|------|--------|------|--------------|
 | HY-Pano-2 [new] | 文本 / 图像 &rarr; 360° 全景 | ~80B | 2026 | [下载](https://huggingface.co/tencent/HY-World-2.0/tree/main/HY-Pano-2.0) |
-| HY-Pano-2-Qwen [new] | 文本 / 图像 &rarr; 360° 全景 | ~425M | 2026 | [下载](https://huggingface.co/tencent/HY-World-2.0/blob/main/HY-Pano-2.0/pytorch_lora_weights.safetensors) |
+| HY-Pano-2-Qwen-LoRA [new] | 文本 / 图像 &rarr; 360° 全景 | ~425M | 2026 | [下载](https://huggingface.co/tencent/HY-World-2.0/blob/main/HY-Pano-2.0/pytorch_lora_weights.safetensors) |
 
 ### 世界生成 - WorldStereo 系列
 
