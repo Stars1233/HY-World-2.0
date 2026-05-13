@@ -197,7 +197,7 @@ rm -rf flash-attention
 pip install flash-attn --no-build-isolation
 ```
 
-**HY-Pano-2** 的安装请参阅 **[hyworld2/panogen/README.md](hyworld2/panogen/README.md)**。
+**HY-Pano-2** 的安装请参阅 **[hyworld2/panogen/README_zh_CN.md](hyworld2/panogen/README_zh_CN.md)**。
 
 ### 代码使用 — 全景生成（HY-Pano-2）
 
